@@ -13,7 +13,7 @@
         </Grid.RowDefinitions>
 
         <StackPanel Grid.Row="0">
-            <TextBlock HorizontalAlignment="Center" FontSize="24" Text="Lego Items" />
+            <TextBlock x:Name="txtLegoItems" HorizontalAlignment="Center" FontSize="24" Text="Lego Items" />
             <Button Content="Choose a file" Width="150" Margin="8" FontSize="20" x:Name="btnLoadFile" Click="btnLoadFile_Click" />
         </StackPanel>
 
@@ -22,10 +22,12 @@
                 <RowDefinition Height="80" />
                 <RowDefinition />
             </Grid.RowDefinitions>
-            <StackPanel Orientation="Horizontal" VerticalAlignment="center" HorizontalAlignment="Center">
-                <TextBlock Text="Filter by" FontSize="22" Margin="10" />
-                <ComboBox x:Name="cbFields" Width="180" Height="30" FontSize="18" />
-                <TextBox x:Name="txtFilter" Width="200" Margin="10" TextChanged="txtFilter_TextChanged" FontSize="20" />
+            <StackPanel>
+                <StackPanel Orientation="Horizontal" VerticalAlignment="center" HorizontalAlignment="Center">
+                    <TextBlock Text="Filter by" FontSize="22" Margin="10" />
+                    <ComboBox x:Name="cbFields" Width="180" Height="30" FontSize="18" SelectionChanged="cbFields_SelectionChanged" />
+                    <ComboBox x:Name="cbFilter" Width="200" Margin="10" SelectionChanged="cbFilter_SelectionChanged" FontSize="20" />
+                </StackPanel>
             </StackPanel>
             <DataGrid x:Name="dgLegoItems" Grid.Row="1" />
         </Grid>
