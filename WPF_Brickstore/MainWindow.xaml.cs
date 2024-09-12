@@ -21,6 +21,7 @@ namespace WPF_Brickstore
     public partial class MainWindow : Window
     {
         ObservableCollection<LegoItem> legoItems = new();
+        List<LegoItem> filteredLegoItems = new();
         public MainWindow()
         {
             InitializeComponent();
@@ -46,6 +47,7 @@ namespace WPF_Brickstore
                     legoItems.Add(newItem);
                 }
                 txtLegoItems.Text = $"Lego items ({legoItems.Count.ToString()})";
+                filteredLegoItems = legoItems.ToList();
                 dgLegoItems.ItemsSource = legoItems.Select(x => new LegoViewModell(x.ItemID, x.ItemName, x.CategoryName, x.ColorName, Convert.ToInt32(x.Qty))).ToList();
             }
         }
@@ -55,16 +57,36 @@ namespace WPF_Brickstore
             if(cbFilter.SelectedItem != null)
             {
                 string selectedItem = cbFilter.SelectedItem.ToString();
-                dgLegoItems.ItemsSource = legoItems.Where(item => item.GetType().GetProperty(cbFields.SelectedItem.ToString())?.GetValue(item)?.ToString().ToLower() == selectedItem.ToLower()).Select(x => new LegoViewModell(x.ItemID, x.ItemName, x.CategoryName, x.ColorName, Convert.ToInt32(x.Qty))).ToList();
+                filteredLegoItems = filteredLegoItems.Where(item => item.GetType().GetProperty(cbFields.SelectedItem.ToString())?.GetValue(item)?.ToString() == selectedItem.ToString()).ToList();
+                dgLegoItems.ItemsSource = filteredLegoItems.Select(x => new LegoViewModell(x.ItemID, x.ItemName, x.CategoryName, x.ColorName, Convert.ToInt32(x.Qty)));
+                TextBlock txtFilter = new TextBlock();
+                Thickness margin = txtFilter.Margin;
+                margin.Left = 10;
+                txtFilter.Margin = margin;
+                txtFilter.FontSize = 18;
+                txtFilter.Text = $"{cbFields.SelectedItem.ToString()}: {selectedItem}";
+                stpFilters.Children.Add(txtFilter);
+                cbFields.SelectedIndex = -1;
+                cbFilter.ItemsSource = new List<string>();
             }
         }
 
         private void cbFields_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            dgLegoItems.ItemsSource = legoItems.Select(x => new LegoViewModell(x.ItemID, x.ItemName, x.CategoryName, x.ColorName, Convert.ToInt32(x.Qty))).ToList(); ;
-            string selectedProperty = cbFields.SelectedItem.ToString();
-            List<string> listboxItems = legoItems.Select(x => x.GetType().GetProperty(selectedProperty).GetValue(x).ToString()).ToList();
-            cbFilter.ItemsSource = listboxItems.Distinct().Order();
+                //dgLegoItems.ItemsSource = legoItems.Select(x => new LegoViewModell(x.ItemID, x.ItemName, x.CategoryName, x.ColorName, Convert.ToInt32(x.Qty))).ToList(); ;
+                if(cbFields.SelectedItem != null)
+                {
+                    string selectedProperty = cbFields?.SelectedItem?.ToString();
+                    List<string> listboxItems = legoItems.Select(x => x.GetType().GetProperty(selectedProperty).GetValue(x).ToString()).ToList();
+                    cbFilter.ItemsSource = listboxItems.Distinct().Order();
+                }
+        }
+
+        private void btnResetFilter_Click(object sender, RoutedEventArgs e)
+        {
+            stpFilters.Children.Clear();
+            dgLegoItems.ItemsSource = legoItems;
+            filteredLegoItems = legoItems.ToList();
         }
     }
 }

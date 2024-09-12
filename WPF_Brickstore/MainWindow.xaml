@@ -27,7 +27,9 @@
                     <TextBlock Text="Filter by" FontSize="22" Margin="10" />
                     <ComboBox x:Name="cbFields" Width="180" Height="30" FontSize="18" SelectionChanged="cbFields_SelectionChanged" />
                     <ComboBox x:Name="cbFilter" Width="200" Margin="10" SelectionChanged="cbFilter_SelectionChanged" FontSize="20" />
+                    <Button x:Name="btnResetFilter" Content="Reset" Width="50" FontSize="18" Height="30" Click="btnResetFilter_Click" />
                 </StackPanel>
+                <StackPanel x:Name="stpFilters" Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Center"></StackPanel>
             </StackPanel>
             <DataGrid x:Name="dgLegoItems" Grid.Row="1" />
         </Grid>
